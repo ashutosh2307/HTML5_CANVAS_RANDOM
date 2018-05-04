@@ -32,7 +32,8 @@ function animate() {
 
   c.beginPath();
   c.arc(x, y, radius, 0, Math.PI * 2, false);
-  c.strokeStyle = 'blue';
+  c.fillStyle = 'purple';
+  c.fill();
   c.stroke();
 
   //to bounce back from the left & right side
