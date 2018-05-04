@@ -15,6 +15,23 @@ const c = canvas.getContext('2d');
 //   c.stroke();
 // // }
 
+var mouse = {
+  x: undefined,
+  y: undefined
+}
+
+window.addEventListener('mousemove', function(event) {
+  mouse.x = event.x;
+  mouse.y = event.y;
+});
+
+window.addEventListener('resize', function(event) {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
+var maxRadius = 30;
+var minRadius = 5;
 
 //Circle Object having indepedent x & y value
 function Circle(x, y, dx, dy, radius, color) {
@@ -23,7 +40,10 @@ function Circle(x, y, dx, dy, radius, color) {
   this.dx = dx;
   this.dy = dy;
   this.radius = radius;
+  this.minRadius = minRadius;
+
   this.color = color;
+
 
   this.draw = function() {
     c.beginPath();
@@ -31,7 +51,7 @@ function Circle(x, y, dx, dy, radius, color) {
     // c.strokeStyle = 'red';
     c.fillStyle = color;
     c.fill();
-    c.stroke();
+    // c.stroke();
   }
 
   this.update = function() {
@@ -47,30 +67,43 @@ function Circle(x, y, dx, dy, radius, color) {
     this.x += this.dx;
     this.y += this.dy;
 
+    //inneractivity
+    if(mouse.x - this.x < 50 && mouse.x - this.x > -50 && mouse.y - this.y < 50 && mouse.y - this.y > -50) {
+        if(this.radius < maxRadius) {
+          this.radius +=1;
+        }
+    }
+    else if(this.radius > this.minRadius) {
+      this.radius -=1;
+    }
+
     this.draw();
   }
 
 }
 
-var circleArray = [];
-
-for(let i = 0; i < 350; i++) {
-
-  let radius = 6;
-  //starting point
-  let x = Math.random() * (innerWidth - radius * 2) - radius;
-  let y = Math.random() * (innerHeight - radius * 2) + radius;
-
-  //velocity of cirle
-  let dx = (Math.random() - 0.5) * 8;
-  let dy = (Math.random() - 0.5) * 8;
-
-  let color = randomColor();
-
-    circleArray.push(new Circle(x, y, dx, dy, radius, color));
-}
+  var circleArray = [];
 
 // console.log(circleArray);
+function init() {
+
+  circleArray = [];
+  for(let i = 0; i < 800; i++) {
+
+    let radius = Math.random() * 3 + 1;
+    //starting point
+    let x = Math.random() * (innerWidth - radius * 2) - radius;
+    let y = Math.random() * (innerHeight - radius * 2) + radius;
+
+    //velocity of cirle
+    let dx = (Math.random() - 0.5) * 3;
+    let dy = (Math.random() - 0.5) * 3;
+
+    let color = randomColor();
+
+      circleArray.push(new Circle(x, y, dx, dy, radius, color));
+  }
+}
 
 //putting infinite loop
 function animate() {
@@ -83,6 +116,7 @@ function animate() {
   }
 
 }
+init();
 
 //Random color
 function randomColor(){
